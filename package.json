@@ -2,22 +2,11 @@
   "name": "question-answering",
   "version": "3.0.0",
   "description": "Production-ready Question Answering directly in Node.js",
-  "keywords": [
-    "nlp",
-    "question answering",
-    "tensorflow",
-    "distilbert"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/huggingface/node-question-answering.git"
-  },
-  "bugs": {
-    "url": "https://github.com/huggingface/node-question-answering/issues"
-  },
   "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "bin": "./cli.js",
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build"  // This script will run after the package is installed
+  },
   "dependencies": {
     "@tensorflow/tfjs-node": "^2.0.1",
     "@types/node": "^13.5.0",
@@ -46,15 +35,6 @@
     "ts-jest": "^26.1.1",
     "typescript": "^3.9.6",
     "yargs-interactive": "^3.0.0"
-  },
-  "scripts": {
-    "dev": "rm -rf dist && npx tsc",
-    "test": "jest",
-    "lint": "eslint --fix --ext .js,.ts src scripts",
-    "lint-check": "eslint --ext .js,.ts src scripts"
-  },
-  "engines": {
-    "node": ">=14 < 21"
   },
   "author": "Pierric Cistac <pierric@huggingface.co>",
   "license": "Apache-2.0"
