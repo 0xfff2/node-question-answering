@@ -42,4 +42,10 @@ export abstract class Tokenizer<T extends BaseTokenizer<object> = BaseTokenizer<
     return this.tokenizer.setPadding({ maxLength });
   }
 
-  setTr
+  setTruncation(
+    maxLength: number,
+    options?: TruncationOptions
+  ): Readonly<TruncationConfiguration> {
+    return this.tokenizer.setTruncation(maxLength, options);
+  }
+}
