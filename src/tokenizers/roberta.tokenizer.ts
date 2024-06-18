@@ -64,4 +64,59 @@ export class RobertaTokenizer extends Tokenizer<ByteLevelBPETokenizer> {
 
       if (!mergesFile) {
         throw new Error(
-          "Unable to find a merges file. Make sure to provide its path in
+          "Unable to find a merges file. Make sure to provide its path in the options"
+        );
+      }
+    }
+
+    const tokenizer = await ByteLevelBPETokenizer.fromOptions({
+      addPrefixSpace: true,
+      mergesFile,
+      vocabFile
+    });
+
+    const clsToken = options.clsToken ?? "<s>";
+    const eosToken = options.eosToken ?? "</s>";
+    const maskToken =
+      options.maskToken ?? new AddedToken("<mask>", true, { leftStrip: true });
+    const padToken = options.padToken ?? "<pad>";
+    const unkToken = options.unkToken ?? "<unk>";
+
+    const eosString = getTokenContent(eosToken);
+    const clsString = getTokenContent(clsToken);
+    const postProcessor = robertaProcessing(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      [eosString, tokenizer.tokenToId(eosString)!],
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      [clsString, tokenizer.tokenToId(clsString)!]
+    );
+
+    tokenizer.setPostProcessor(postProcessor);
+    tokenizer.addSpecialTokens([clsToken, eosToken, maskToken, padToken, unkToken]);
+
+    return new RobertaTokenizer(tokenizer, {
+      clsToken,
+      eosToken,
+      maskToken,
+      padToken,
+      unkToken
+    });
+  }
+
+  getQuestionLength(encoding: Encoding): number {
+    return encoding.getTokens().indexOf(getTokenContent(this.eosToken)) - 1; // Take cls token into account
+  }
+
+  getContextStartIndex(encoding: Encoding): number {
+    return this.getQuestionLength(encoding) + 3;
+  }
+
+  setPadding(maxLength: number): Readonly<PaddingConfiguration> {
+    const padToken = getTokenContent(this.padToken);
+    return this.tokenizer.setPadding({
+      maxLength,
+      padToken: padToken,
+      padId: this.tokenizer.tokenToId(padToken)
+    });
+  }
+}
