@@ -58,7 +58,7 @@ export class BertTokenizer extends Tokenizer<BertWordPieceTokenizer> {
 
   getQuestionLength(encoding: Encoding): number {
     return (
-      encoding.tokens.indexOf(getTokenContent(this.tokenizer.configuration.sepToken)) - 1 // Take cls token into account
+      encoding.getTokens().indexOf(getTokenContent(this.tokenizer.configuration.sepToken)) - 1 // Take cls token into account
     );
   }
 
