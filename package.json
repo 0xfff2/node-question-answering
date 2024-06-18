@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "scripts": {
     "build": "tsc",
-    "prepare": "npm run build"  // This script will run after the package is installed
+    "prepare": "npm run build"
   },
   "dependencies": {
     "@tensorflow/tfjs-node": "^2.0.1",
